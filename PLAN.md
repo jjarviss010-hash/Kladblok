@@ -40,6 +40,11 @@ YouTube geeft Shorts die vooral clips van anderen herposten minder bereik. Clips
 - Meer volume automatiseren zonder eigen toevoeging versnelt het probleem.
 - **Gevolg voor het ontwerp:** de agent moet bij elke clip eigen waarde toevoegen: een eigen hook, tekst-overlay of commentaar.
 - Status: bevestigd door meerdere media (Dexerto, Android Authority). YouTube noemde geen startdatum en geen drempel.
+- **Instagram doet iets vergelijkbaars, al sinds 2024.** Accounts die in 30 dagen 10 keer of vaker content van anderen herposten, verdwijnen uit de aanbevelingen. Accounts met toestemming van de maker zijn uitgezonderd. Volgens PetaPixel (één bron) is dit in 2026 uitgebreid naar het hele platform. Hyped zit met ongeveer 140 posts per maand ver boven die grens. **Controleer dit:** Instagram → Instellingen → Accountstatus.
+- **Dit hangt af van de inhoud, niet van de uploadmethode.** Posten via OpusClip of handmatig maakt hiervoor geen verschil. Er is geen hard bewijs dat platforms posts via een officiële API of scheduler minder bereik geven. Wat er aan onderzoek is, komt vooral van schedulerbedrijven zelf (Metricool, Poster.ly), dus behandel het als sterke aanname en niet als feit.
+- **Uitbetaling is een apart risico.**
+  - **YouTube:** het beleid voor hergebruikte content kan monetisatie voor het hele kanaal stopzetten bij weinig eigen toevoeging. Dat beleid bestond al.
+  - **Content ID:** een claim stuurt de opbrengst van die video naar de rechthebbende.
 
 ### 2. Auteursrecht
 
@@ -163,4 +168,7 @@ Een podcast van 2 uur kost ongeveer 120 credits. Met 760 credits kun je dus zo'n
 - [OpusClip social posting API](https://help.opus.pro/api-reference/endpoints/social-posting/overview)
 - [Dexerto: YouTube cracks down on clipping channels](https://www.dexerto.com/youtube/youtube-cracks-down-on-clipping-channels-in-shorts-update-prioritizing-original-content-3415700/)
 - [Android Authority: YouTube Shorts promoting original content](https://www.androidauthority.com/youtube-shorts-promoting-original-content-reposts-3718668/)
+- [PetaPixel: New Instagram policies target reposted content (2026)](https://petapixel.com/2026/04/30/new-instagram-policies-target-reposted-content/)
+- [Gigazine: Instagram algorithm prioritizes original content (2024)](https://www.gigazine.net/gsc_news/en/20240502-instagram-updated-algorithm-prioritizes-original-content)
+- [Metricool: Does scheduling affect reach?](https://metricool.com/does-scheduling-social-media-posts-affect-reach/)
 - [RapidDev: TikTok comment moderation via API](https://www.rapidevelopers.com/md/api-automations/how-to-automate-tiktok-comment-moderation-using-the-api)
