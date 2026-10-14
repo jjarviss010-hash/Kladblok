@@ -9,9 +9,9 @@
     "./agents/hyped-scout/agent.md": {
       "kind": "agent",
       "id": "agent_013ycwX1hsBbPTg9QPfxjmq5",
-      "version": "3",
-      "hash": "676eda27d655e472ebdb9293fdb97c47",
-      "remote_hash": "542f46b9f907c7ff7bbc4ace58c601e8"
+      "version": "4",
+      "hash": "c5e7d8d64b160b947ef71a978408c7ee",
+      "remote_hash": "8b76469df510157a9445946355ba5b7d"
     },
     "./agents/hyped-scout/environment.yaml": {
       "kind": "environment",

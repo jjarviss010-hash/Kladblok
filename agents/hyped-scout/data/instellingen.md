@@ -6,4 +6,4 @@
 - Clippen en posten: UIT (eigenaar doet dit zelf in OpusClip)
 - Tijdzone eigenaar: Europe/Amsterdam
 - Taal naar eigenaar: Nederlands. Taal van scripts, hooks en captions: Engels.
-- Discord: kanaal #algemeen (ID 1560048954706759740). Berichten komen binnen via /hyped; antwoorden post je zelf met tools/discord_post.py.
+- Discord: kanaal #algemeen (ID 1560048954706759740). Berichten komen binnen via de bot op de pc van de eigenaar; antwoorden post je zelf met tools/discord_post.py.
