@@ -18,7 +18,7 @@ import { createClient } from "npm:@supabase/supabase-js@2.49.4";
 const CONFIG = {
   discordAppId: "YOUR_DISCORD_APP_ID",
   discordPublicKey: "YOUR_DISCORD_PUBLIC_KEY",
-  discordChannelId: "1560048954706759740",
+  discordChannelId: "1560048955515998221",
   agentId: "agent_013ycwX1hsBbPTg9QPfxjmq5",
   environmentId: "env_01WGArQbuPxkEVzwFS2qHgFQ",
   vaultId: "vlt_011Cg2qa9eGeAWiZ3jufGVVb",

@@ -25,10 +25,10 @@
 |---|---|---|
 | Agent | Claude Console | `hyped-agent`, `agent_013ycwX1hsBbPTg9QPfxjmq5` |
 | Sandbox (alleen YouTube + Discord) | Claude Console | `env_01WGArQbuPxkEVzwFS2qHgFQ` |
-| Kluis | Claude Console | `hyped-scout`: `YOUTUBE_API_KEY` ✅, `DISCORD_BOT_TOKEN` ⏳ |
+| Kluis | Claude Console | `hyped-scout`: `YOUTUBE_API_KEY` ✅, `DISCORD_BOT_TOKEN` ✅ |
 | Geheugen | Claude Console | `hyped-geheugen`, `memstore_01BPM1DGQcaJEGHroGgJMgTD` |
 | Bot | jouw pc | `bot/hyped_bot.py` |
-| Discord-kanaal | Discord | `#algemeen`, `1560048954706759740` |
+| Discord-kanaal | Discord | `#algemeen`, `1560048955515998221` (server Hyped HQ: `1560048954706759740`) |
 
 ## Installeren op je pc
 

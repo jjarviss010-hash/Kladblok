@@ -14,7 +14,7 @@ import time
 import urllib.error
 import urllib.request
 
-CHANNEL_ID = "1560048954706759740"
+CHANNEL_ID = "1560048955515998221"  # #algemeen (tekst) in server Hyped HQ (server-ID 1560048954706759740)
 LIMIT = 1900
 
 

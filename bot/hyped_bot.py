@@ -44,7 +44,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)s %(levelname
 log = logging.getLogger("hyped")
 
 TZ = ZoneInfo("Europe/Amsterdam")
-CHANNEL_ID = int(os.environ.get("DISCORD_CHANNEL_ID", "1560048954706759740"))
+CHANNEL_ID = int(os.environ.get("DISCORD_CHANNEL_ID", "1560048955515998221"))
 OWNER_ID = int(os.environ["DISCORD_OWNER_ID"]) if os.environ.get("DISCORD_OWNER_ID") else None
 AGENT_ID = os.environ.get("HYPED_AGENT_ID", "agent_013ycwX1hsBbPTg9QPfxjmq5")
 ENVIRONMENT_ID = os.environ.get("HYPED_ENVIRONMENT_ID", "env_01WGArQbuPxkEVzwFS2qHgFQ")
