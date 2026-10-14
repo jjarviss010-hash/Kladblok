@@ -159,6 +159,8 @@ Een podcast van 2 uur kost ongeveer 120 credits. Met 760 credits kun je dus zo'n
 3. Hosting: kleine eigen server of Anthropic Managed Agents?
 4. Bronnenlijst: welke kanalen en podcasts moet de Scout volgen?
 5. Waar kost het huidige proces je de meeste tijd: bronnen zoeken, clips kiezen, captions schrijven of posten?
+6. **Eigen toevoeging:** neem jij korte intro's of reacties op (±10 min per dag)? De agent schrijft het script en monteert de clip. Alternatief: alleen tekst en context, maar dat is zwakker en de grens is onbekend.
+7. **Clipping-campagnes (Whop Content Rewards, Vyro, Clipping.net):** podcasters en merken betalen per 1000 views. De toestemming zit dan al in de afspraak, dus het auteursrecht is geregeld. Of YouTube er eigen toevoeging bij eist, blijft onzeker. Doen we mee?
 
 ## Bronnen
 
