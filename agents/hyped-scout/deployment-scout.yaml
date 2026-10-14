@@ -1,0 +1,23 @@
+# Schema: 3x per dag. Pas toepassen in stap 5 van SETUP.md (eerst testen).
+name: hyped-scout-3x-daags
+agent: ./agent.md
+environment_id: ./environment.yaml
+vault_ids:
+  - YOUR_VAULT_ID   # vlt_... uit claude-lock.json na stap 4
+resources:
+  - ./memory_store-geheugen.yaml
+schedule:
+  type: cron
+  expression: "0 8,14,20 * * *"
+  timezone: Europe/Amsterdam
+budget:
+  type: limit
+  max_list_cost:
+    currency: USD
+    amount: "300"   # max $3 per ronde (in centen)
+initial_events:
+  - type: user.message
+    content:
+      - type: text
+        text: |
+          Voer je scoutronde uit volgens je instructies.

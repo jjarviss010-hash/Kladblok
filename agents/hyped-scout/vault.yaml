@@ -1,0 +1,4 @@
+# Alleen de container. De sleutels (YOUTUBE_API_KEY, DISCORD_BOT_TOKEN)
+# voeg je zelf toe in de Claude Console, nooit in deze repo of in de chat.
+type: vault
+display_name: hyped-scout
