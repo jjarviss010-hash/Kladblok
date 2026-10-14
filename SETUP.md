@@ -67,7 +67,7 @@ Een testgesprek kostte $0,11.
 | `DISCORD_BOT_TOKEN` | token uit stap B (geheim) |
 | `ANTHROPIC_API_KEY` | een **nieuwe** sleutel uit platform.claude.com → API keys (geheim; niet de sleutel die in de chat stond) |
 | `DISCORD_CHANNEL_ID` | `1560048954706759740` (#algemeen) |
-| `DISCORD_OWNER_ID` | jouw gebruikers-ID |
+| `DISCORD_OWNER_ID` | *niet nodig*: de bot herkent jou als maker van de Discord-app. Wil je hem toch zetten, typ dan `!id` in `#algemeen` zodra de bot draait. |
 | `HYPED_AGENT_ID` | `agent_013ycwX1hsBbPTg9QPfxjmq5` |
 | `HYPED_ENVIRONMENT_ID` | `env_01WGArQbuPxkEVzwFS2qHgFQ` |
 | `HYPED_VAULT_ID` | `vlt_011Cg2qa9eGeAWiZ3jufGVVb` |

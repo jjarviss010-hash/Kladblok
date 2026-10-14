@@ -3,7 +3,8 @@
 - Elk bericht van de eigenaar in het kanaal gaat direct naar de agent; het antwoord
   komt terug in hetzelfde kanaal.
 - Drie keer per dag start de bot zelf een scoutronde (SCOUT_TIMES, Amsterdamse tijd).
-- Commando's: `!nieuw` (verse sessie), `!stop` (huidige taak afbreken).
+- Commando's: `!nieuw` (verse sessie), `!stop` (huidige taak afbreken), `!id` (toont je gebruikers-ID).
+- Alleen de eigenaar wordt doorgestuurd: DISCORD_OWNER_ID, of anders de eigenaar van de Discord-app.
 """
 
 from __future__ import annotations
@@ -21,7 +22,8 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)s %(levelname
 log = logging.getLogger("hyped.bot")
 
 CHANNEL_ID = int(os.environ["DISCORD_CHANNEL_ID"])
-OWNER_ID = int(os.environ["DISCORD_OWNER_ID"])
+# Optioneel: zonder deze variabele is de eigenaar van de Discord-app de eigenaar van de bot.
+OWNER_ID = int(os.environ["DISCORD_OWNER_ID"]) if os.environ.get("DISCORD_OWNER_ID") else None
 SCOUT_TIMES = [
     tuple(int(x) for x in t.strip().split(":"))
     for t in os.environ.get("SCOUT_TIMES", "08:00,14:00,20:00").split(",")
@@ -45,12 +47,16 @@ class HypedBot(discord.Client):
         super().__init__(intents=intents)
         self.agent = HypedAgent()
         self.lock = asyncio.Lock()  # één taak tegelijk; volgende berichten wachten netjes
+        self.owner_id = OWNER_ID
 
     async def setup_hook(self) -> None:
+        if self.owner_id is None:
+            app = await self.application_info()
+            self.owner_id = app.team.owner_id if app.team else app.owner.id
         self.loop.create_task(self.scheduler())
 
     async def on_ready(self) -> None:
-        log.info("ingelogd als %s, kanaal %s", self.user, CHANNEL_ID)
+        log.info("ingelogd als %s, kanaal %s, eigenaar %s", self.user, CHANNEL_ID, self.owner_id)
 
     async def channel(self) -> discord.abc.Messageable:
         return self.get_channel(CHANNEL_ID) or await self.fetch_channel(CHANNEL_ID)
@@ -83,9 +89,14 @@ class HypedBot(discord.Client):
                 await channel.send(result.notice)
 
     async def on_message(self, message: discord.Message) -> None:
-        if message.author.bot or message.channel.id != CHANNEL_ID or message.author.id != OWNER_ID:
+        if message.author.bot or message.channel.id != CHANNEL_ID:
             return
         content = message.content.strip()
+        if content == "!id":
+            await message.channel.send(f"Jouw gebruikers-ID: `{message.author.id}`")
+            return
+        if message.author.id != self.owner_id:
+            return
         if content == "!nieuw":
             self.agent.reset()
             await message.channel.send("🆕 Volgende bericht start een verse sessie (geheugen blijft bewaard).")
