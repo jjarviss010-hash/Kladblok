@@ -53,10 +53,18 @@ Bestanden: `agents/hyped-scout/`. Het plan erachter staat in `PLAN.md`.
 Start een **nieuwe sessie**; die ziet de `ANTHROPIC_API_KEY` uit stap 1. Zeg daar: *"Lees SETUP.md en voer stap 4 uit"*, en stuur de twee Discord-ID's mee.
 
 Claude doet dan het volgende:
-- Vult de ID's in `agents/hyped-scout/data/instellingen.md` in.
-- Installeert de `ant`-CLI.
-- Laat je het plan zien met `ant apply --dry-run`. Pas na jouw akkoord maakt Claude de agent, de omgeving, de kluis en het geheugen aan.
-- Laadt de startbestanden uit `data/` in het geheugen.
+
+```sh
+bash scripts/install-ant.sh && export PATH=$PATH:$(go env GOPATH)/bin
+# Discord-ID's invullen in agents/hyped-scout/data/instellingen.md
+R="agents/hyped-scout"
+ant apply --dry-run -v $R/agent.md $R/environment.yaml $R/vault.yaml $R/memory_store-geheugen.yaml
+# alleen na jouw akkoord op het plan hierboven:
+ant apply --yes $R/agent.md $R/environment.yaml $R/vault.yaml $R/memory_store-geheugen.yaml
+bash scripts/seed-memory.sh
+```
+
+`claude-lock.json` (met alle ID's) wordt daarna gecommit.
 
 ## Stap 5 (jij): sleutels in de kluis
 
@@ -69,10 +77,17 @@ In de Claude Console, bij Managed Agents → **Vaults** → `hyped-scout`, voeg 
 
 Laat de injectie op **header** staan (standaard in de Console). De agent ziet de sleutels zelf nooit; Anthropic voegt ze pas toe als het verzoek de sandbox verlaat.
 
+**Alternatief:**
+1. Zet `YOUTUBE_API_KEY` en `DISCORD_BOT_TOKEN` als secrets in de cloud-omgeving.
+2. Start een nieuwe sessie.
+3. Laat Claude `bash scripts/add-credentials.sh` draaien.
+
+Ook zo komen de sleutels nooit in de chat.
+
 ## Stap 6 (samen): testronde
 
-1. Claude maakt het schema aan en zet het **direct op pauze**.
-2. Claude start één handmatige ronde.
+1. Claude vult het vault-ID uit `claude-lock.json` in `deployment-scout.yaml` in. Daarna maakt hij het schema aan en zet het **direct op pauze**: `ant apply --yes $R/deployment-scout.yaml && ant beta:deployments pause --deployment-id <id>`.
+2. Claude start één handmatige ronde: `bash scripts/test-run.sh`. Je krijgt een link naar de sessie in de Console, waar je kunt meekijken.
 3. Jij kijkt in Discord of de voorstellen kloppen:
    - Zijn de bronnen goed gekozen?
    - Kloppen de fragmenten?
