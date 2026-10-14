@@ -3,7 +3,7 @@ name: hyped-scout-3x-daags
 agent: ./agent.md
 environment_id: ./environment.yaml
 vault_ids:
-  - YOUR_VAULT_ID   # vlt_... uit claude-lock.json na stap 4
+  - vlt_011Cg2qa9eGeAWiZ3jufGVVb
 resources:
   - ./memory_store-geheugen.yaml
 schedule:
