@@ -1,4 +1,4 @@
-"""Test de agent zonder Discord: python bot/chat_cli.py "je bericht"
+"""Test de agent zonder Discord: python scripts/chat_cli.py "je bericht"
 
 Leest de ID's uit claude-lock.json en ANTHROPIC_API_KEY uit de omgeving.
 """

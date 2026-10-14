@@ -1,6 +1,5 @@
-# Sandbox voor de Hyped-agent. Alleen de YouTube Data API is bereikbaar:
+# Sandbox voor de Hyped-agent. Alleen de YouTube Data API en Discord zijn bereikbaar:
 # dat is de veiligheidsgrens, omdat bash zonder goedkeuring mag draaien.
-# Discord loopt via de bot (bot/), niet via de agent.
 name: hyped-scout
 config:
   type: cloud
@@ -11,3 +10,4 @@ config:
     allowed_hosts:
       - www.googleapis.com
       - youtube.googleapis.com
+      - discord.com

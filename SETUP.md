@@ -1,99 +1,60 @@
 # Hyped-agent: opzetten
 
-## Hoe het werkt
+## Hoe het werkt (gratis, 24/7)
 
 ```
- jij (Discord #algemeen)  ⇄  Hyped-bot (Railway, 24/7)  ⇄  Hyped-agent (Claude, bij Anthropic)
-                                  │                              │
-                                  └─ start om 08/14/20 uur       └─ YouTube Data API (alleen lezen)
-                                     zelf een scoutronde            + geheugen (bronnen, voorkeuren, …)
+ jij in Discord: /hyped <bericht>
+        │
+        ▼
+ Supabase-functie "hyped-discord"  ──►  Hyped-agent (Claude, bij Anthropic)
+ (gratis, altijd aan)                     │  YouTube Data API (lezen)
+        ▲                                 │  geheugen (bronnen, voorkeuren, …)
+ pg_cron: elk uur een tik;                └──► post zijn antwoord zelf in #algemeen
+ om 08/14/20 uur start hij een scoutronde
 ```
 
-- **Je typt een bericht**, de agent gaat direct aan de slag en antwoordt in hetzelfde kanaal.
+- **`/hyped <bericht>`** in `#algemeen`: de agent gaat direct aan de slag en zet zijn antwoord in het kanaal.
 - **Elke dag om 08:00, 14:00 en 20:00** doet hij zelf een scoutronde.
+- **`/hyped nieuw`** start een verse sessie (het geheugen blijft bewaard). **`/hyped stop`** breekt de huidige taak af.
 - **Hij clipt en post niet.** Hij levert per video de fragmenttijden, captions, hook en intro-script; jij clipt in OpusClip.
-- **Commando's in Discord:** `!nieuw` start een verse sessie (het geheugen blijft bewaard), `!stop` breekt de huidige taak af.
+- **De bot staat in Discord altijd als "offline".** Dat klopt: hij reageert via `/hyped` en hoeft niet online te zijn.
 
-## Status
+## Onderdelen
 
-| Onderdeel | Status |
-|---|---|
-| Agent (`hyped-agent`, `agent_013ycwX1hsBbPTg9QPfxjmq5`) | ✅ aangemaakt en getest |
-| Sandbox (alleen YouTube bereikbaar, `env_01WGArQbuPxkEVzwFS2qHgFQ`) | ✅ |
-| Kluis (`vlt_011Cg2qa9eGeAWiZ3jufGVVb`) | ✅ aangemaakt, **YouTube-sleutel ontbreekt nog** |
-| Geheugen (`memstore_01BPM1DGQcaJEGHroGgJMgTD`) | ✅ gevuld: instellingen, bronnen, voorkeuren, al geclipt, voorstellen, logboek |
-| Bot-code (`bot/`) | ✅ klaar en getest zonder Discord |
-| Bot online (Railway) | ⏳ stap C |
+| Onderdeel | Waar | ID / naam |
+|---|---|---|
+| Agent | Claude Console | `hyped-agent`, `agent_013ycwX1hsBbPTg9QPfxjmq5` |
+| Sandbox (alleen YouTube + Discord) | Claude Console | `env_01WGArQbuPxkEVzwFS2qHgFQ` |
+| Kluis | Claude Console | `hyped-scout`, `vlt_011Cg2qa9eGeAWiZ3jufGVVb`: `YOUTUBE_API_KEY`, `DISCORD_BOT_TOKEN` |
+| Geheugen | Claude Console | `hyped-geheugen`, `memstore_01BPM1DGQcaJEGHroGgJMgTD` |
+| Deurbel | Supabase | functie `hyped-discord` (`supabase/functions/`) |
+| Schema + opslag | Supabase | tabel `hyped_state`, cron-job `hyped-tick` (`supabase/migrations/`) |
+| Discord-kanaal | Discord | `#algemeen`, `1560048954706759740` |
 
-Een testgesprek kostte $0,11.
+## Eenmalige stappen voor jou
 
----
-
-## Stap A (jij): YouTube-sleutel in de kluis
-
-1. Ga naar console.cloud.google.com → nieuw project → *APIs & Services → Library* → **YouTube Data API v3** → *Enable*.
-2. Ga naar *Credentials → Create credentials → API key*. Kies daarna *Edit*, en zet onder *API restrictions* alleen de YouTube Data API v3 aan.
-3. Ga naar platform.claude.com → **Managed Agents → Vaults → `hyped-scout`** → *Add credential* → type **Environment variable**:
-   - Naam: `YOUTUBE_API_KEY`
-   - Waarde: je sleutel
-   - Toegestane hosts: `www.googleapis.com` en `youtube.googleapis.com`
-   - Injectie: **header**
-
-## Stap B (jij): Discord-bot
-
-1. Ga naar discord.com/developers/applications → *New Application* (naam: Hyped) → tab **Bot**:
-   - **Reset Token**: kopieer het token en bewaar het. Dit is geheim.
-   - **Message Content Intent**: aanzetten.
-2. Ga naar *OAuth2 → URL Generator*:
-   - Scope: `bot`.
-   - Rechten: *View Channels*, *Send Messages*, *Read Message History*, *Add Reactions*.
-   - Open de link en kies je server.
-3. ID's kopiëren:
-   - Zet in Discord de ontwikkelaarsmodus aan: *Instellingen → Geavanceerd*.
-   - Kopieer het **kanaal-ID** van `#algemeen`.
-   - Kopieer je eigen **gebruikers-ID**.
-
-## Stap C (jij): bot online zetten op Railway (±$5/maand)
-
-1. Ga naar railway.com, log in met GitHub en neem het **Hobby**-abonnement.
-2. *New Project → Deploy from GitHub repo* → kies `jjarviss010-hash/Kladblok`, branch `claude/eloquent-clarke-hwv4xa`.
-3. Ga bij de service naar **Settings**:
-   - **Root Directory**: `bot`
-   - **Start Command**: `python main.py`. Dit staat ook in `bot/railway.json`; vul het in als Railway het niet oppikt.
-4. Ga naar **Variables** en voeg toe:
-
-| Naam | Waarde |
-|---|---|
-| `DISCORD_BOT_TOKEN` | token uit stap B (geheim) |
-| `ANTHROPIC_API_KEY` | een **nieuwe** sleutel uit platform.claude.com → API keys (geheim; niet de sleutel die in de chat stond) |
-| `DISCORD_CHANNEL_ID` | `1560048954706759740` (#algemeen) |
-| `DISCORD_OWNER_ID` | *niet nodig*: de bot herkent jou als maker van de Discord-app. Wil je hem toch zetten, typ dan `!id` in `#algemeen` zodra de bot draait. |
-| `HYPED_AGENT_ID` | `agent_013ycwX1hsBbPTg9QPfxjmq5` |
-| `HYPED_ENVIRONMENT_ID` | `env_01WGArQbuPxkEVzwFS2qHgFQ` |
-| `HYPED_VAULT_ID` | `vlt_011Cg2qa9eGeAWiZ3jufGVVb` |
-| `HYPED_MEMORY_STORE_ID` | `memstore_01BPM1DGQcaJEGHroGgJMgTD` |
-| `SESSION_BUDGET_CENTS` | `500` (max $5 per dag; optioneel) |
-| `SCOUT_TIMES` | `08:00,14:00,20:00` (optioneel) |
-
-5. Kies *Deploy*. In de logs moet `ingelogd als Hyped#…` verschijnen.
-6. Werkt alles? Verwijder dan in de Claude Console de oude API-sleutel die in de chat is geplakt.
-
-## Stap D: testen
-
-Typ in `#algemeen`: `doe nu een scoutronde`. Binnen een paar seconden zie je "Hyped is aan het typen…", en na een paar minuten de voorstellen.
-
----
+1. **Discord Developer Portal** → je app → *General Information*: stuur **Application ID** en **Public Key** naar Claude. Die zijn niet geheim.
+2. **Supabase** → *Edge Functions → Secrets*: vul `ANTHROPIC_API_KEY` in (een **nieuwe** sleutel uit platform.claude.com) en `DISCORD_BOT_TOKEN`.
+3. **Claude Console** → Vaults → `hyped-scout` → *Add credential* → *Environment variable*:
+   - naam: `DISCORD_BOT_TOKEN`
+   - waarde: bot-token
+   - host: `discord.com`
+   - injectie: header
+4. **Discord Developer Portal** → *General Information* → **Interactions Endpoint URL**:
+   `https://fxfkjnbhrcdvhofukcpc.supabase.co/functions/v1/hyped-discord` → opslaan.
+5. Werkt alles? Verwijder dan in de Claude Console de oude API-sleutel die in de chat is geplakt.
 
 ## Wijzigen
 
-- **Instructies van de agent:** pas `agents/hyped-scout/agent.md` aan. Daarna:
-  ```sh
-  bash scripts/install-ant.sh
-  ant apply agents/hyped-scout/agent.md
-  ```
-  Toon eerst het plan met `--dry-run`. Lopende sessies houden de oude versie; `!nieuw` in Discord pakt de nieuwe.
-- **Agent testen zonder Discord:** `python bot/chat_cli.py "je vraag"`.
-- **Geheugen bekijken:** Claude Console → Managed Agents → Memory stores → `hyped-geheugen`.
+- **Instructies van de agent:** pas `agents/hyped-scout/agent.md` aan. Daarna `ant apply agents/hyped-scout/agent.md`, met eerst `--dry-run`. Installeer `ant` met `bash scripts/install-ant.sh`. Een lopende dag-sessie houdt de oude versie; `/hyped nieuw` pakt de nieuwe.
+- **Tijden en budget:** `CONFIG` bovenin `supabase/functions/hyped-discord/index.ts`, en daarna opnieuw deployen.
+- **Testen zonder Discord:** `python scripts/chat_cli.py "je vraag"`. Dit post ook in Discord.
+- **Geheugen bekijken:** Claude Console → Memory stores → `hyped-geheugen`.
+
+## Kosten
+
+- Hosting: €0 (Supabase gratis).
+- Agent: ±$0,55 per scoutronde, enkele centen per vraag. Maximum $5 per dag-sessie.
 
 ## Later (bewust nog uit)
 
