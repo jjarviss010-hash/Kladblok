@@ -155,7 +155,8 @@ Een podcast van 2 uur kost ongeveer 120 credits. Met 760 credits kun je dus zo'n
 ## Open beslissingen
 
 1. ~~Programmeertaal en hosting~~ → **Gekozen: Claude Managed Agents.** Anthropic host de agent en het schema; er is geen eigen server nodig. Zie `SETUP.md`.
-2. ~~Goedkeuring~~ → **Gekozen: Discord.** Telegram valt af, omdat het bot-token in de URL staat. De kluis van Managed Agents kan sleutels alleen in headers invullen, en Discord gebruikt een header.
+2. ~~Goedkeuring en communicatie~~ → **Gekozen: Discord met een 24/7-bot op Railway** (`bot/`). De bot stuurt elk bericht direct naar de agent en start zelf de 3 dagelijkse scoutrondes. De agent heeft zelf geen toegang tot Discord.
+4. **Eigenaar (14 okt):** nog niet clippen of posten, om fouten en creditverlies te voorkomen. De agent levert clippakketten; de eigenaar clipt zelf.
 3. **Clip-aanpak (bevestigd door eigenaar):** eerst de hele video analyseren, dan alleen de beste fragmenten via OpusClip laten clippen (`rangeStart`/`rangeEnd`). Nooit hele video's insturen.
 4. Bronnenlijst: welke kanalen en podcasts moet de Scout volgen?
 5. Waar kost het huidige proces je de meeste tijd: bronnen zoeken, clips kiezen, captions schrijven of posten?

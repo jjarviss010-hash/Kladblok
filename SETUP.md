@@ -1,107 +1,102 @@
-# Hyped Scout: stap voor stap opzetten
+# Hyped-agent: opzetten
 
-**Wat het is:** een Claude Managed Agent. Anthropic draait de agent en het schema; je hebt geen eigen server nodig.
+## Hoe het werkt
 
-**Wat hij doet (versie 1):**
-- 3× per dag nieuwe bronvideo's zoeken.
-- Per video de beste fragmenten bepalen.
-- Voorstellen in Discord zetten, met een schatting van de credits.
+```
+ jij (Discord #algemeen)  ⇄  Hyped-bot (Railway, 24/7)  ⇄  Hyped-agent (Claude, bij Anthropic)
+                                  │                              │
+                                  └─ start om 08/14/20 uur       └─ YouTube Data API (alleen lezen)
+                                     zelf een scoutronde            + geheugen (bronnen, voorkeuren, …)
+```
 
-**Wat hij nog niet doet:** clippen en posten. Daarmee verbruikt hij **geen OpusClip-credits**.
+- **Je typt een bericht**, de agent gaat direct aan de slag en antwoordt in hetzelfde kanaal.
+- **Elke dag om 08:00, 14:00 en 20:00** doet hij zelf een scoutronde.
+- **Hij clipt en post niet.** Hij levert per video de fragmenttijden, captions, hook en intro-script; jij clipt in OpusClip.
+- **Commando's in Discord:** `!nieuw` start een verse sessie (het geheugen blijft bewaard), `!stop` breekt de huidige taak af.
 
-Bestanden: `agents/hyped-scout/`. Het plan erachter staat in `PLAN.md`.
+## Status
+
+| Onderdeel | Status |
+|---|---|
+| Agent (`hyped-agent`, `agent_013ycwX1hsBbPTg9QPfxjmq5`) | ✅ aangemaakt en getest |
+| Sandbox (alleen YouTube bereikbaar, `env_01WGArQbuPxkEVzwFS2qHgFQ`) | ✅ |
+| Kluis (`vlt_011Cg2qa9eGeAWiZ3jufGVVb`) | ✅ aangemaakt, **YouTube-sleutel ontbreekt nog** |
+| Geheugen (`memstore_01BPM1DGQcaJEGHroGgJMgTD`) | ✅ gevuld: instellingen, bronnen, voorkeuren, al geclipt, voorstellen, logboek |
+| Bot-code (`bot/`) | ✅ klaar en getest zonder Discord |
+| Bot online (Railway) | ⏳ stap C |
+
+Een testgesprek kostte $0,11.
 
 ---
 
-## Stap 1 (jij): Claude Console
+## Stap A (jij): YouTube-sleutel in de kluis
 
-1. Ga naar platform.claude.com en maak een account (of log in).
-2. Billing: zet er tegoed op. $20 is genoeg voor de eerste weken testen.
-3. API keys: maak een sleutel aan met de naam `hyped`.
-4. Zet die sleutel in deze cloud-omgeving.
-   - **Waar:** omgevingsmenu in de titelbalk van de sessie → Edit → *Network secrets* (of *Environment variables*).
-   - **Naam:** `ANTHROPIC_API_KEY`
-   - **Let op:** plak de sleutel nooit in de chat.
+1. Ga naar console.cloud.google.com → nieuw project → *APIs & Services → Library* → **YouTube Data API v3** → *Enable*.
+2. Ga naar *Credentials → Create credentials → API key*. Kies daarna *Edit*, en zet onder *API restrictions* alleen de YouTube Data API v3 aan.
+3. Ga naar platform.claude.com → **Managed Agents → Vaults → `hyped-scout`** → *Add credential* → type **Environment variable**:
+   - Naam: `YOUTUBE_API_KEY`
+   - Waarde: je sleutel
+   - Toegestane hosts: `www.googleapis.com` en `youtube.googleapis.com`
+   - Injectie: **header**
 
-## Stap 2 (jij): YouTube Data API-sleutel
+## Stap B (jij): Discord-bot
 
-1. Ga naar console.cloud.google.com en maak een nieuw project (`hyped`).
-2. *APIs & Services → Library → YouTube Data API v3 → Enable*.
-3. *Credentials → Create credentials → API key*.
-4. *Edit API key → API restrictions → alleen YouTube Data API v3*.
-5. Bewaar de sleutel. Je zet hem in stap 5 in de kluis.
-
-## Stap 3 (jij): Discord
-
-1. Maak een eigen server (bijv. "Hyped HQ") met een kanaal `#scout`.
-2. Ga naar discord.com/developers/applications → *New Application* → tab **Bot**:
-   - **Reset Token:** kopieer en bewaar het token.
-   - **Message Content Intent:** aanzetten. Zonder deze instelling kan de bot je antwoorden niet lezen.
-3. Bot uitnodigen:
-   - Ga naar *OAuth2 → URL Generator*.
+1. Ga naar discord.com/developers/applications → *New Application* (naam: Hyped) → tab **Bot**:
+   - **Reset Token**: kopieer het token en bewaar het. Dit is geheim.
+   - **Message Content Intent**: aanzetten.
+2. Ga naar *OAuth2 → URL Generator*:
    - Scope: `bot`.
-   - Rechten: *View Channels*, *Send Messages*, *Read Message History*.
+   - Rechten: *View Channels*, *Send Messages*, *Read Message History*, *Add Reactions*.
    - Open de link en kies je server.
-4. ID's kopiëren:
-   - Zet in Discord *Instellingen → Geavanceerd → Ontwikkelaarsmodus* aan.
-   - Rechtsklik op `#scout` → *Kanaal-ID kopiëren*.
-   - Rechtsklik op jezelf → *Gebruikers-ID kopiëren*.
-   - Deze twee ID's zijn niet geheim; die mag je in de chat sturen.
+3. ID's kopiëren:
+   - Zet in Discord de ontwikkelaarsmodus aan: *Instellingen → Geavanceerd*.
+   - Kopieer het **kanaal-ID** van `#algemeen`.
+   - Kopieer je eigen **gebruikers-ID**.
 
-## Stap 4 (Claude): agent aanmaken
+## Stap C (jij): bot online zetten op Railway (±$5/maand)
 
-Start een **nieuwe sessie**; die ziet de `ANTHROPIC_API_KEY` uit stap 1. Zeg daar: *"Lees SETUP.md en voer stap 4 uit"*, en stuur de twee Discord-ID's mee.
+1. Ga naar railway.com, log in met GitHub en neem het **Hobby**-abonnement.
+2. *New Project → Deploy from GitHub repo* → kies `jjarviss010-hash/Kladblok`, branch `claude/eloquent-clarke-hwv4xa`.
+3. Ga bij de service naar **Settings**:
+   - **Root Directory**: `bot`
+   - **Start Command**: `python main.py`. Dit staat ook in `bot/railway.json`; vul het in als Railway het niet oppikt.
+4. Ga naar **Variables** en voeg toe:
 
-Claude doet dan het volgende:
+| Naam | Waarde |
+|---|---|
+| `DISCORD_BOT_TOKEN` | token uit stap B (geheim) |
+| `ANTHROPIC_API_KEY` | een **nieuwe** sleutel uit platform.claude.com → API keys (geheim; niet de sleutel die in de chat stond) |
+| `DISCORD_CHANNEL_ID` | kanaal-ID van `#algemeen` |
+| `DISCORD_OWNER_ID` | jouw gebruikers-ID |
+| `HYPED_AGENT_ID` | `agent_013ycwX1hsBbPTg9QPfxjmq5` |
+| `HYPED_ENVIRONMENT_ID` | `env_01WGArQbuPxkEVzwFS2qHgFQ` |
+| `HYPED_VAULT_ID` | `vlt_011Cg2qa9eGeAWiZ3jufGVVb` |
+| `HYPED_MEMORY_STORE_ID` | `memstore_01BPM1DGQcaJEGHroGgJMgTD` |
+| `SESSION_BUDGET_CENTS` | `500` (max $5 per dag; optioneel) |
+| `SCOUT_TIMES` | `08:00,14:00,20:00` (optioneel) |
 
-```sh
-bash scripts/install-ant.sh && export PATH=$PATH:$(go env GOPATH)/bin
-# Discord-ID's invullen in agents/hyped-scout/data/instellingen.md
-R="agents/hyped-scout"
-ant apply --dry-run -v $R/agent.md $R/environment.yaml $R/vault.yaml $R/memory_store-geheugen.yaml
-# alleen na jouw akkoord op het plan hierboven:
-ant apply --yes $R/agent.md $R/environment.yaml $R/vault.yaml $R/memory_store-geheugen.yaml
-bash scripts/seed-memory.sh
-```
+5. Kies *Deploy*. In de logs moet `ingelogd als Hyped#…` verschijnen.
+6. Werkt alles? Verwijder dan in de Claude Console de oude API-sleutel die in de chat is geplakt.
 
-`claude-lock.json` (met alle ID's) wordt daarna gecommit.
+## Stap D: testen
 
-## Stap 5 (jij): sleutels in de kluis
+Typ in `#algemeen`: `doe nu een scoutronde`. Binnen een paar seconden zie je "Hyped is aan het typen…", en na een paar minuten de voorstellen.
 
-In de Claude Console, bij Managed Agents → **Vaults** → `hyped-scout`, voeg je twee *environment variable*-credentials toe:
+---
 
-| Naam | Waarde | Toegestane hosts |
-|---|---|---|
-| `YOUTUBE_API_KEY` | sleutel uit stap 2 | `www.googleapis.com`, `youtube.googleapis.com` |
-| `DISCORD_BOT_TOKEN` | token uit stap 3 | `discord.com` |
+## Wijzigen
 
-Laat de injectie op **header** staan (standaard in de Console). De agent ziet de sleutels zelf nooit; Anthropic voegt ze pas toe als het verzoek de sandbox verlaat.
+- **Instructies van de agent:** pas `agents/hyped-scout/agent.md` aan. Daarna:
+  ```sh
+  bash scripts/install-ant.sh
+  ant apply agents/hyped-scout/agent.md
+  ```
+  Toon eerst het plan met `--dry-run`. Lopende sessies houden de oude versie; `!nieuw` in Discord pakt de nieuwe.
+- **Agent testen zonder Discord:** `python bot/chat_cli.py "je vraag"`.
+- **Geheugen bekijken:** Claude Console → Managed Agents → Memory stores → `hyped-geheugen`.
 
-**Alternatief:**
-1. Zet `YOUTUBE_API_KEY` en `DISCORD_BOT_TOKEN` als secrets in de cloud-omgeving.
-2. Start een nieuwe sessie.
-3. Laat Claude `bash scripts/add-credentials.sh` draaien.
+## Later (bewust nog uit)
 
-Ook zo komen de sleutels nooit in de chat.
-
-## Stap 6 (samen): testronde
-
-1. Claude vult het vault-ID uit `claude-lock.json` in `deployment-scout.yaml` in. Daarna maakt hij het schema aan en zet het **direct op pauze**: `ant apply --yes $R/deployment-scout.yaml && ant beta:deployments pause --deployment-id <id>`.
-2. Claude start één handmatige ronde: `bash scripts/test-run.sh`. Je krijgt een link naar de sessie in de Console, waar je kunt meekijken.
-3. Jij kijkt in Discord of de voorstellen kloppen:
-   - Zijn de bronnen goed gekozen?
-   - Kloppen de fragmenten?
-   - Zijn de invalshoeken bruikbaar?
-4. Claude stelt de instructies bij. Herhaal tot je tevreden bent.
-
-## Stap 7: schema aanzetten
-
-Het schema hervatten: om 08:00, 14:00 en 20:00 (Amsterdam). Er geldt een maximum van $3 per ronde.
-
-Jij reageert in `#scout`, bijvoorbeeld `1 3 ja, 2 nee - te politiek`. De agent leert daarvan in de volgende ronde.
-
-## Daarna (versie 2)
-
-- **Transcriptbron toevoegen.** De momenten worden dan veel preciezer dan alleen op basis van hoofdstukken en comments.
-- **OpusClip-toegang.** De agent dient alleen de fragmenten in die jij hebt goedgekeurd, en nooit hele video's.
-- **Captions en inplannen** via OpusClip.
+- Clippen en posten via OpusClip: de officiële API en CLI staan in `github.com/opus-pro/opus-skills`.
+- Een transcriptdienst, voor preciezere momenten.
+- Instagram-comments en -statistieken (vereist een Meta-app).

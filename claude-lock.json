@@ -9,15 +9,15 @@
     "./agents/hyped-scout/agent.md": {
       "kind": "agent",
       "id": "agent_013ycwX1hsBbPTg9QPfxjmq5",
-      "version": "1",
-      "hash": "e42a49800362e0e7ed8cbb096aa2cb21",
-      "remote_hash": "fd1d7fbce32619d2f9db8fe8065bfe8a"
+      "version": "2",
+      "hash": "6e432c2a501c908687bd01077339f1d3",
+      "remote_hash": "68574a37c20a6b10f6f1d03357a26040"
     },
     "./agents/hyped-scout/environment.yaml": {
       "kind": "environment",
       "id": "env_01WGArQbuPxkEVzwFS2qHgFQ",
-      "hash": "d88a065ec44b1f48c2a6facfdf2b7351",
-      "remote_hash": "35520323411e71c5f2a479a2266300ed"
+      "hash": "39b25320a5d4280d599b7848d8f22bce",
+      "remote_hash": "cf4c2d18c2434090ff63e404be3d3ea7"
     },
     "./agents/hyped-scout/memory_store-geheugen.yaml": {
       "kind": "memory_store",
