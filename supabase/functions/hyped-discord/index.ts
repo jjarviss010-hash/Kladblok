@@ -16,8 +16,8 @@ import nacl from "npm:tweetnacl@1.0.3";
 import { createClient } from "npm:@supabase/supabase-js@2.49.4";
 
 const CONFIG = {
-  discordAppId: "YOUR_DISCORD_APP_ID",
-  discordPublicKey: "YOUR_DISCORD_PUBLIC_KEY",
+  discordAppId: "1560067975631994931",
+  discordPublicKey: "4c4d39f75554afa598f434f3050e49bc1d4626ccc0980773a5429320802a20fe",
   discordChannelId: "1560048955515998221",
   agentId: "agent_013ycwX1hsBbPTg9QPfxjmq5",
   environmentId: "env_01WGArQbuPxkEVzwFS2qHgFQ",
